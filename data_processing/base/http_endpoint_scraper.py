@@ -31,4 +31,4 @@ class HTTPEndpointScraper:
         self.data = {}
 
     def _get_url(self):
-        return get(self.url, self.headers)
+        return get(self.url, headers=self.headers)
