@@ -27,25 +27,33 @@ def endpoint():
 
 
 def test_init(exporter):
+    assert isinstance(exporter, HTTPRESTController)
     assert exporter.base_url
     assert exporter.headers
     assert not exporter.auth
+    assert exporter.verify
     assert exporter.session
+    assert exporter.session.headers
     assert not exporter.session.auth
+    assert exporter.session.verify
     assert exporter.base_url == 'http://example.com'
     assert exporter.headers == {'Accept': 'application/json'}
-    assert exporter.session.headers == {'Accept': 'application/json'}
-    assert exporter.headers == exporter.session.headers
+    assert exporter.auth is None
+    assert exporter.verify is True
+    assert exporter.session.headers == exporter.headers
+    assert exporter.session.verify == exporter.verify
 
 
 def test_setup_session(exporter):
     old_session = exporter.session
     exporter.headers = {'Content-Type': 'application/json'}
     exporter.auth = ('username', 'password')
+    exporter.verify = False
     exporter.setup_session()
     assert exporter.session is not old_session
     assert exporter.session.headers == exporter.headers
     assert exporter.session.auth == exporter.auth
+    assert exporter.session.verify == exporter.verify
 
 
 def test_build_url_with_params(exporter, endpoint, params):

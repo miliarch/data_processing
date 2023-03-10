@@ -3,10 +3,11 @@ from urllib.parse import urlencode
 
 
 class HTTPRESTController:
-    def __init__(self, base_url, headers, auth=None):
+    def __init__(self, base_url, headers, auth=None, verify=True):
         self.base_url = base_url
         self.headers = headers
         self.auth = auth
+        self.verify = verify
         self.setup_session()
 
     def setup_session(self):
@@ -14,6 +15,7 @@ class HTTPRESTController:
         self.session.headers = self.headers
         if self.auth:
             self.session.auth = self.auth
+        self.session.verify = self.verify
 
     def get(self, endpoint, params=None):
         """Make GET request to given endpoint with params on on self.url"""
