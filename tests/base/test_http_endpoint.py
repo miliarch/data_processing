@@ -5,7 +5,7 @@ from data_processing.base import HTTPEndpointScraper
 
 @pytest.fixture()
 def scraper(response_object, url='http://example.com/endpoint'):
-    scraper = HTTPEndpointScraper(url, scrape_on_init=False)
+    scraper = HTTPEndpointScraper(url)
     scraper._get_url = MagicMock(return_value=response_object)
     return scraper
 

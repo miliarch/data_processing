@@ -3,6 +3,8 @@ from urllib.parse import urlencode
 
 
 class HTTPRESTController:
+    """Base class for HTTP REST controllers"""
+
     def __init__(self, base_url, headers, auth=None, verify=True):
         self.base_url = base_url
         self.headers = headers
@@ -18,19 +20,19 @@ class HTTPRESTController:
         self.session.verify = self.verify
 
     def get(self, endpoint, params=None):
-        """Make GET request to given endpoint with params on on self.url"""
+        """Make GET request to given endpoint with params on self.url"""
         url = self.build_url(endpoint, params)
         return self._get(url)
 
     def put(self, endpoint, data=None, params=None):
-        """Make PUT request to endpoint on on self.url with given data and
+        """Make PUT request to endpoint on self.url with given data and
         params
         """
         url = self.build_url(endpoint, params)
         return self._put(url, data=data)
 
     def post(self, endpoint, data=None, params=None):
-        """Make POST request to endpoint on on self.url with given data
+        """Make POST request to endpoint on self.url with given data
         and params
         """
         url = self.build_url(endpoint, params)

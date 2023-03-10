@@ -4,7 +4,7 @@ from data_processing.scrapers import CDCCovidCasesScraper
 
 @pytest.fixture()
 def scraper(measurement='measurement_name'):
-    scraper = CDCCovidCasesScraper(measurement, update_on_init=False)
+    scraper = CDCCovidCasesScraper(measurement)
     return scraper
 
 

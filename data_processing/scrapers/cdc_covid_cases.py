@@ -3,6 +3,8 @@ from data_processing.base import HTTPEndpointScraper
 
 
 class CDCCovidCasesScraper(HTTPEndpointScraper):
+    """Scraper for CDC covid case data"""
+
     URL = 'https://covid.cdc.gov/covid-data-tracker/COVIDData/getAjaxData?id=US_MAP_DATA'
 
     KEY_MAP = {
@@ -37,11 +39,9 @@ class CDCCovidCasesScraper(HTTPEndpointScraper):
         'us_trend_maxdate'
     ]
 
-    def __init__(self, measurement, update_on_init=False):
+    def __init__(self, measurement):
         self.measurement = measurement
-        super().__init__(self.URL, scrape_on_init=update_on_init)
-        if update_on_init:
-            self.update()
+        super().__init__(self.URL)
 
     def reset(self):
         """Resets all data attributes to default values"""

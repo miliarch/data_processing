@@ -2,7 +2,9 @@ from requests import get
 
 
 class HTTPEndpointScraper:
-    def __init__(self, url, data_format='json', scrape_on_init=False):
+    """Base class for HTTP endpoint scrapers"""
+
+    def __init__(self, url, data_format='json'):
         self.url = url
         self.headers = {'Accept': f'application/{data_format}'}
         self.reset()
