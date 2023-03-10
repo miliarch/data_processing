@@ -49,11 +49,11 @@ class CDCCovidCasesScraper(HTTPEndpointScraper):
         self.metadata = {}
         self.region_data = {}
         self.updated_at = float()
-        self.line_protocol_data = []
+        self.line_protocol_lines = []
 
     def update(self):
         """Updates self.metadata, self.region_data, self.updated_at, and
-        self.line_protocol_data attributes.
+        self.line_protocol_lines attributes.
         """
         if not self.data:
             self.scrape()
@@ -63,10 +63,16 @@ class CDCCovidCasesScraper(HTTPEndpointScraper):
             self.metadata['update'],
             '%b %d %Y %I:%M%p'
         ).timestamp()
-        self._parse_region_data_to_line_protocol_data()
+        self._parse_region_data_to_line_protocol_lines()
 
-    def _parse_region_data_to_line_protocol_data(self):
-        if not self.line_protocol_data:
+    @property
+    def line_protocol_data(self):
+        data = ''
+        data += '\n'.join(self.line_protocol_lines)
+        return data
+
+    def _parse_region_data_to_line_protocol_lines(self):
+        if not self.line_protocol_lines:
             for record in self.region_data:
                 tag_str = ''
                 field_str = ''
@@ -89,6 +95,6 @@ class CDCCovidCasesScraper(HTTPEndpointScraper):
                 line_protocol_str = f'{self.measurement},'
                 line_protocol_str += f'{tag_str[:-1]} '
                 line_protocol_str += f'{field_str[:-1]} '
-                line_protocol_str += f'{self.updated_at}'
+                line_protocol_str += f'{int(self.updated_at)}'
 
-                self.line_protocol_data.append(line_protocol_str)
+                self.line_protocol_lines.append(line_protocol_str)

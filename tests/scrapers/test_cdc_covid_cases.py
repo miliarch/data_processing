@@ -100,22 +100,25 @@ def mock_data():
 
 
 @pytest.fixture
-def mock_line_protocol_data():
+def line_protocol_lines():
     """Mock line protocol data to match mock_data"""
-    line_protocol_data = [
-        'measurement_name,abbr=AK,fips=02,jurisdiction=Alaska total_cases=293766,cases_7_days=451,Seven_day_cum_new_cases_per_100k=61.7,total_deaths=1449,death_per_100k=198,rate_per_100k=40157,id=2 1678230480.0',
-        'measurement_name,abbr=AL,fips=01,jurisdiction=Alabama total_cases=1642062,cases_7_days=3714,deaths_7_days=69,Seven_day_cum_new_cases_per_100k=75.7,Seven_day_cum_new_deaths_per_100k=1.4,total_deaths=21001,death_per_100k=428,rate_per_100k=33490,id=1 1678230480.0',
-        'measurement_name,abbr=AR,fips=05,jurisdiction=Arkansas total_cases=1004753,cases_7_days=1252,deaths_7_days=23,Seven_day_cum_new_cases_per_100k=41.5,Seven_day_cum_new_deaths_per_100k=0.8,total_deaths=12980,death_per_100k=430,rate_per_100k=33294,id=5 1678230480.0',
-        'measurement_name,abbr=USA,fips=00,jurisdiction=United\\ States\\ of\\ America total_cases=103499382,cases_7_days=226620,deaths_7_days=2290,Seven_day_cum_new_cases_per_100k=68.3,Seven_day_cum_new_deaths_per_100k=0.7,total_deaths=1117856,death_per_100k=336,rate_per_100k=31175 1678230480.0',
+    line_protocol_lines = [
+        'measurement_name,abbr=AK,fips=02,jurisdiction=Alaska total_cases=293766,cases_7_days=451,Seven_day_cum_new_cases_per_100k=61.7,total_deaths=1449,death_per_100k=198,rate_per_100k=40157,id=2 1678230480',
+        'measurement_name,abbr=AL,fips=01,jurisdiction=Alabama total_cases=1642062,cases_7_days=3714,deaths_7_days=69,Seven_day_cum_new_cases_per_100k=75.7,Seven_day_cum_new_deaths_per_100k=1.4,total_deaths=21001,death_per_100k=428,rate_per_100k=33490,id=1 1678230480',
+        'measurement_name,abbr=AR,fips=05,jurisdiction=Arkansas total_cases=1004753,cases_7_days=1252,deaths_7_days=23,Seven_day_cum_new_cases_per_100k=41.5,Seven_day_cum_new_deaths_per_100k=0.8,total_deaths=12980,death_per_100k=430,rate_per_100k=33294,id=5 1678230480',
+        'measurement_name,abbr=USA,fips=00,jurisdiction=United\\ States\\ of\\ America total_cases=103499382,cases_7_days=226620,deaths_7_days=2290,Seven_day_cum_new_cases_per_100k=68.3,Seven_day_cum_new_deaths_per_100k=0.7,total_deaths=1117856,death_per_100k=336,rate_per_100k=31175 1678230480',
     ]
-    return line_protocol_data
+    return line_protocol_lines
 
 
 def test_init(scraper):
+    assert scraper
+    assert isinstance(scraper, CDCCovidCasesScraper)
     assert not scraper.response
     assert not scraper.data
     assert not scraper.metadata
     assert not scraper.region_data
+    assert not scraper.line_protocol_lines
     assert not scraper.line_protocol_data
     assert scraper.URL
     assert scraper.KEY_MAP
@@ -153,16 +156,16 @@ def test_init(scraper):
     ]
 
 
-def test_update(scraper, mock_data, mock_line_protocol_data):
+def test_update(scraper, mock_data, line_protocol_lines):
     scraper.data = mock_data
     assert scraper.data
     scraper.update()
     assert scraper.metadata
     assert scraper.region_data
-    assert scraper.line_protocol_data
+    assert scraper.line_protocol_lines == line_protocol_lines
     assert scraper.metadata == mock_data['CSVInfo']
     assert scraper.region_data == mock_data['US_MAP_DATA']
-    assert scraper.line_protocol_data == mock_line_protocol_data
+    assert scraper.line_protocol_data == '\n'.join(scraper.line_protocol_lines)
 
 
 def test_reset(scraper, mock_data):
@@ -170,10 +173,12 @@ def test_reset(scraper, mock_data):
     scraper.update()
     assert scraper.metadata
     assert scraper.region_data
+    assert scraper.line_protocol_lines
     assert scraper.line_protocol_data
     scraper.reset()
     assert not scraper.response
     assert not scraper.data
     assert not scraper.metadata
     assert not scraper.region_data
+    assert not scraper.line_protocol_lines
     assert not scraper.line_protocol_data
