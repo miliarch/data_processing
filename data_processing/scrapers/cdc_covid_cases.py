@@ -36,7 +36,14 @@ class CDCCovidCasesScraper(HTTPEndpointScraper):
         'state_level_community_transmission',
         'us_trend_new_case',
         'us_trend_new_death',
-        'us_trend_maxdate'
+        'us_trend_maxdate',
+        'mmwrweek_end',
+        'change',
+        'change_text',
+        'burden',
+        'burden_text',
+        'data_as_of',
+        'data_period_end',
     ]
 
     def __init__(self, measurement):
