@@ -44,6 +44,7 @@ class CDCCovidCasesScraper(HTTPEndpointScraper):
         'burden_text',
         'data_as_of',
         'data_period_end',
+        'collection_date',
     ]
 
     def __init__(self, measurement):

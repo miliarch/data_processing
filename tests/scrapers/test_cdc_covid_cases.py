@@ -160,6 +160,7 @@ def test_init(scraper):
         'burden_text',
         'data_as_of',
         'data_period_end',
+        'collection_date',
     ]
 
 
